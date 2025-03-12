@@ -2,8 +2,8 @@
 FROM postgres:17.1
 
 # Set environment variables
-ENV POSTGRES_USER=reelsyncuser
-ENV POSTGRES_PASSWORD=reelsyncpassword
+ENV POSTGRES_USER=reelsync
+ENV POSTGRES_PASSWORD=reelsync
 ENV POSTGRES_DB=reelsync
 
 # Copy initialization scripts from the local directory to the 

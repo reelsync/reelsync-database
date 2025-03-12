@@ -8,8 +8,8 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: reelsyncuser
-      POSTGRES_PASSWORD: reelsyncpassword
+      POSTGRES_USER: reelsync
+      POSTGRES_PASSWORD: reelsync
       POSTGRES_DB: reelsync
 
 volumes:

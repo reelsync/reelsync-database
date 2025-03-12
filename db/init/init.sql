@@ -15,10 +15,6 @@ DROP TABLE IF EXISTS comments, videos, video_parts, missing_video_parts, tags, v
 -- Drop types if they already exist
 DROP TYPE IF EXISTS status_enum, device_enum;
 
--- Creating enum types for status and device
-CREATE TYPE status_enum AS ENUM ('Available', 'Checked Out', 'Reserved', 'Lost');
-CREATE TYPE device_enum AS ENUM ('PC', 'Laptop', 'Mobile', 'Tablet', 'Other');
-
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
     user_id SERIAL PRIMARY KEY,
@@ -50,20 +46,24 @@ CREATE TABLE IF NOT EXISTS videos (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create video_parts table
 -- Create status table
 CREATE TABLE IF NOT EXISTS status (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
+    name VARCHAR(50) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create device table
 CREATE TABLE IF NOT EXISTS device (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
+    name VARCHAR(50) NOT NULL UNIQUE,
+    mount_path VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Modify video_parts table to reference status and device tables
+-- Create video_parts table
 CREATE TABLE IF NOT EXISTS video_parts (
     id SERIAL PRIMARY KEY,
     video_id INTEGER REFERENCES videos(video_id) ON DELETE CASCADE,
@@ -100,6 +100,8 @@ CREATE TABLE IF NOT EXISTS missing_video_parts (
     video_id INTEGER REFERENCES videos(video_id) ON DELETE CASCADE,
     part_number INTEGER NOT NULL,
     description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (video_id, part_number)
 );
 
@@ -146,7 +148,7 @@ CREATE TABLE IF NOT EXISTS video_genres (
 -- Adding indexes for frequently queried fields
 CREATE INDEX idx_videos_title ON videos(title);
 CREATE INDEX idx_video_parts_filename ON video_parts(filename);
-CREATE INDEX idx_video_parts_status ON video_parts(status);
+CREATE INDEX idx_video_parts_status ON video_parts(status_id);
 CREATE INDEX idx_tags_name ON tags(name);
 CREATE INDEX idx_genres_name ON genres(name);
 
@@ -204,4 +206,27 @@ BEGIN
         (1, 2, 'What a beautiful documentary!'),
         (2, 1, 'I loved the action scenes!')
     ON CONFLICT DO NOTHING;  -- Prevent error if already exists
+END $$;
+
+-- Insert initial data into the status table
+DO $$
+BEGIN
+    INSERT INTO status (name) VALUES
+        ('Available'),
+        ('Checked Out'),
+        ('Reserved'),
+        ('Lost')
+    ON CONFLICT (name) DO NOTHING;  -- Prevent error if already exists
+END $$;
+
+-- Insert initial data into the device table
+DO $$
+BEGIN
+    INSERT INTO device (name, mount_path) VALUES
+        ('PC', '/mnt/pc'),
+        ('Laptop', '/mnt/laptop'),
+        ('Mobile', '/mnt/mobile'),
+        ('Tablet', '/mnt/tablet'),
+        ('Other', '/mnt/other')
+    ON CONFLICT (name) DO NOTHING;  -- Prevent error if already exists
 END $$;

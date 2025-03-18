@@ -6,9 +6,5 @@ ENV POSTGRES_USER=reelsync
 ENV POSTGRES_PASSWORD=reelsync
 ENV POSTGRES_DB=reelsync
 
-# Copy initialization scripts from the local directory to the 
-# container's initialization directory
-COPY ./db/init/init.sql /docker-entrypoint-initdb.d/
-
 # Expose the default PostgreSQL port
 EXPOSE 5432

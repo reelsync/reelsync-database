@@ -1,4 +1,3 @@
-# Node modules
 node_modules/
 
 # Logs
@@ -20,14 +19,10 @@ docker-compose.debug.yml
 .idea/
 *.iml
 
-# OS generated files
 .DS_Store
 Thumbs.db
 
-# Backup files
 *.bak
 *.swp
 *.swo
-
-# Other
 .vscode/

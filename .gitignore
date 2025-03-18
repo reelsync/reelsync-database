@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+
+# Flyway configuration
+config/flyway.conf
+
+# Docker
+docker-compose.override.yml
+docker-compose.debug.yml
+
+# JetBrains IDEs
+.idea/
+*.iml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.swp
+*.swo
+
+# Other
+.vscode/
